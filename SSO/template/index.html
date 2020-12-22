@@ -7,12 +7,33 @@
   </head>
   <body>
     <form>
-      <input type="text" name="username" placeholder="请输入用户名" />
-      <input type="text" name="password" placeholder="请输入密码" />
+      <input type="text" name="username" value="admin" placeholder="请输入用户名" />
+      <input type="password" name="password" value="admin" placeholder="请输入密码" />
       <button id="login-btn">login</button>
     </form>
-    <script src="./static/utils.js"></script>
+    <script src="./template/static/utils.js"></script>
     <script src="https://lib.baomitu.com/jquery/3.5.1/jquery.min.js"></script>
+    <!-- <script>
+      (function () {
+        $.ajax({
+          type: 'post',
+          url: '/user/info',
+          success(res) {
+            console.log('success', res);
+            if (!res) return;
+
+            document.querySelector('form').remove();
+            document.body.innerHTML = `
+              <h1>${res.id}</h1>
+              <h1>${res.username}</h1>
+            `;
+          },
+          error(err) {
+            console.log('err', err);
+          },
+        });
+      })();
+    </script> -->
     <script>
       const btn_login = document.querySelector('#login-btn');
       const dom_username = document.querySelector("input[name='username']");

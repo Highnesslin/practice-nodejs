@@ -98,8 +98,8 @@ ps：可以研究下 **EventEmitter** 的实现方式
 - 协商缓存
   - 1.1. last-modified
     ```javascript
-    res.setHeader("last-modified", new Date().toUTCString());
-    if (req.headers["if-modified-since"].getTime() + 3 * 1000 > Date.now()) {
+    res.setHeader('last-modified', new Date().toUTCString());
+    if (req.headers['if-modified-since'].getTime() + 3 * 1000 > Date.now()) {
       res.statusCode = 304;
       res.end();
     }
@@ -107,7 +107,7 @@ ps：可以研究下 **EventEmitter** 的实现方式
   - 1.2. Etag
     ```javascript
     // 根据内容创建的hash值
-    if (req.headers["if-none-match"] === hash) {
+    if (req.headers['if-none-match'] === hash) {
       res.statusCode = 304;
       res.end();
     }
@@ -120,3 +120,5 @@ iconv-lite 编码类型
 cheerio 后端的 jquery
 
 # SSO 单点登录
+
+获取到登录状态后，将
