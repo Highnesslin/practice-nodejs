@@ -2,16 +2,17 @@ const Koa = require('koa');
 const router = require('koa-router')();
 const static = require('koa-static');
 const app = new Koa();
-const axios = require('axios');
 const querystring = require('querystring');
+const { reqGithubUser, reqGithubToken } = require('./api');
 
-app.use(static(__dirname + '/'));
+app.use(static(__dirname + '/template'));
 
 const config = {
   client_id: '924b0f275b200b1aed50',
   client_secret: '44f1d332e370b0aa6ea897883bd00947fceefed7',
 };
 
+// github 授权登录
 router.get('/github/login', async ctx => {
   //
   let path = `https://github.com/login/oauth/authorize`;
@@ -19,33 +20,19 @@ router.get('/github/login', async ctx => {
   ctx.redirect(path);
 });
 
+// github 授权回调
 router.get('/auth/github/callback', async ctx => {
   const { code } = ctx.query;
 
-  const params = {
-    ...config,
-    code,
-  };
-
-  const ret = await axios.post('https://github.com/login/oauth/access_token', params);
+  const ret = await reqGithubToken(code);
 
   const data = querystring.parse(ret.data);
 
-  console.log('data.access_token', data.access_token);
-
-  const { data: user } = await axios({
-    method: 'get',
-    url: `https://api.github.com/user`,
-    headers: {
-      accept: 'application/json',
-      Authorization: `token ${data.access_token}`,
-    },
-  });
-
-  console.log('user', user);
+  const { data: user } = await reqGithubUser(data.access_token);
 
   ctx.body = `
-    <h1>${user.login}</h1>
+    <h1>github:${user.login}</h1>
+    <h1>name:${user.name}</h1>
     <img src="${user.avatar_url}"/>
     <a href="${user.html_url}">主页</a>
     <h1>${user.company} - ${user.location}</h1>

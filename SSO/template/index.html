@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form>
+      <input type="text" name="username" placeholder="请输入用户名" />
+      <input type="text" name="password" placeholder="请输入密码" />
+      <button id="login-btn">login</button>
+    </form>
+    <script src="./static/utils.js"></script>
+    <script src="https://lib.baomitu.com/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      const btn_login = document.querySelector('#login-btn');
+      const dom_username = document.querySelector("input[name='username']");
+      const dom_password = document.querySelector("input[name='password']");
+
+      function getUserName() {
+        return dom_username.value;
+      }
+
+      function getPassword() {
+        return dom_password.value;
+      }
+
+      // ----------------------------------------------------
+      const rule_username = createRule(() => {
+        if (getUserName() === '') return false;
+
+        return true;
+      });
+
+      const rule_password = createRule(() => {
+        if (getPassword() === '') return false;
+
+        return true;
+      });
+
+      rule_username.setNext(rule_password);
+
+      // ----------------------------------------------------
+
+      btn_login.onclick = function (e) {
+        e.preventDefault();
+
+        const validate = rule_username.handle();
+
+        if (!validate) return;
+
+        $.ajax({
+          type: 'post',
+          url: '/login',
+          data: {
+            username: getUserName(),
+            password: getPassword(),
+          },
+          success(res) {
+            console.log('success', res);
+          },
+          error(err) {
+            console.log('err', err);
+          },
+        });
+      };
+    </script>
+  </body>
+</html>
